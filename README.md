@@ -5,7 +5,7 @@ rinnaの対話GPTモデルを利用したチャットインタフェース実装
 
 gpt_serverディレクトリ内ファイル群が計算サーバのプログラム，middle_server内ファイル群がインタフェース提供サーバのプログラムである．
 
-以下のPythonライブラリが必要となる．（requirements.txtに記載あり）
+以下のPythonライブラリ並びに依存ライブラリが必要となる．（requirements.txtに記載あり）
 
 計算サーバ
 - transformers
