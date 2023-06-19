@@ -26,4 +26,4 @@ gpt_serverディレクトリ内ファイル群が計算サーバのプログラ�
   https://qiita.com/uji_keyaki/items/87dd26c178ed8a18d267
 - rinna/japanese-gpt-neox-3.6b-instruction-ppo Hugging Face
   https://huggingface.co/rinna/japanese-gpt-neox-3.6b-instruction-ppo
-　他
+- 他多数
