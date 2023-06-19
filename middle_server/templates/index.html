@@ -1,0 +1,112 @@
+<html lang="ja">
+
+<head>
+    <meta charset="utf-8">
+    <title>rinna-gpt-chat</title>
+    <link rel="stylesheet" href="{{ url_for('static', path='/style.css') }}">
+    <meta name="viewport" content="width=350">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0">
+</head>
+
+<body>
+
+    <!-- ▼LINE風ここから -->
+    <div class="line__container">
+        <!-- タイトル -->
+        <div class="line__title">
+            rinna-GPT
+            <input type="submit" value="リセット" onclick="resetChat()">
+        </div>
+
+        <!-- ▼会話エリア scrollを外すと高さ固定解除 -->
+        <div id="chat_view" class="line__contents scroll"></div>
+        <!-- ▲会話エリア ここまで -->
+
+        <!-- <form action="/" method="post"> -->
+        <div class="bms_send" id="inputform">
+            <input type="text" class="bms_send_message" name="text" id="textbox" accept-charset="UTF-8">
+            <input type="submit" value="送信" class="bms_send_btn" id="btnbox" onclick="postForm()">
+        </div>
+        <!-- </form> -->
+
+    </div>
+    <!-- ▲LINE風ここまで -->
+    <script>
+        var KS = '@@@@@@';
+
+        window.onload = (event) => {
+            view_chat();
+        };
+
+        window.document.onkeydown = function(event){
+            if (event.key === 'Enter') {
+                postForm();
+            }
+        }
+
+        function postForm() {
+            var text = document.getElementById('textbox').value;
+            document.getElementById('textbox').value = "";
+            text = encodeURIComponent(text);
+            chat_log = localStorage.getItem('myChat');
+            if (chat_log == null){
+                chat_log = "";
+            }
+            chat_log = chat_log + KS + text;
+            localStorage.setItem('myChat', chat_log);
+            view_chat();
+
+            var return_text = "text=" + chat_log;
+
+            var textbox = document.getElementById('textbox');
+            var btnbox = document.getElementById('btnbox');
+            textbox.disabled = true;
+            btnbox.disabled = true;
+
+            var xhr = new XMLHttpRequest();
+            xhr.open('POST', '/');
+            xhr.setRequestHeader('content-type', 'application/x-www-form-urlencoded;charset=utf-8');
+            xhr.send(return_text);
+
+            xhr.onreadystatechange = async function () {
+                if (xhr.readyState === 4 && xhr.status === 200) {
+                    var result = xhr.responseText;
+                    result = result.slice(1,-1);
+                    result = encodeURIComponent(result);
+                    chat_log = localStorage.getItem('myChat');
+                    chat_log = chat_log + KS + result;
+                    localStorage.setItem('myChat', chat_log);
+                    view_chat();
+                }
+                textbox.disabled = false;
+                btnbox.disabled = false;
+            }
+        }
+
+
+        function resetChat() {
+            localStorage.removeItem('myChat');
+            var ele = document.getElementById('chat_view');
+            ele.innerHTML = '';
+        }
+
+        function view_chat() {
+            chat_log = localStorage.getItem('myChat');
+            var html = "";
+            chat_log = chat_log.slice(KS.length);
+            for (i in chat_log.split(KS)){
+                var chat = decodeURIComponent(chat_log.split(KS)[i]);
+                if (i%2==0){
+                    html += `<div class="line__right"><div class="text">${chat}</div></div>`;
+                }else{
+                    html += `<div class="line__left"><figure><img src="{{ url_for('static', path='/rinna.png') }}"/></figure><div class="line__left-text"><div class="name">rinna</div><div class="text">${chat}</div></div></div>`;
+                }
+            }
+            var ele = document.getElementById('chat_view');
+            ele.innerHTML = html;
+            ele.scrollTo(0, ele.scrollHeight);
+        }
+    </script>
+</body>
+
+</html>
