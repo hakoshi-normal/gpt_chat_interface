@@ -18,7 +18,6 @@ app.mount(
     name='static'
     )
 
-KS = '*' # 伝送用区切り文字
 
 s_IP = '*'
 s_PORT = None # int
@@ -38,17 +37,6 @@ def get_answer(msg):
     if msg=="exit":
         return "終わり"
     return f'[{round(time.time()-start, 3)}]' + result[:-2]
-
-
-def gene_prompt(dialogues):
-    prompt = []
-    for i, dialogue in enumerate(dialogues):
-        data = {
-            "speaker": ["ユーザー", "システム"][i%2],
-            "text": dialogue
-        }
-        prompt.append(data)
-    return prompt
 
 
 @app.get("/")
